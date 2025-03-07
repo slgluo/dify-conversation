@@ -43,7 +43,7 @@ const AgentContent: FC<AgentContentProps> = ({
           {
             !!thought.message_files?.length && (
               <FileList
-                files={getProcessedFilesFromResponse(thought.message_files.map((item: any) => ({ ...item, related_id: item.id })))}
+                files={getProcessedFilesFromResponse(thought.message_files.filter((item: any) => item.id).map((item: any) => ({ ...item, related_id: item.id })))}
                 showDeleteAction={false}
                 showDownloadAction={true}
                 canPreview={true}
