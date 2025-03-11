@@ -7,21 +7,23 @@ import RehypeKatex from 'rehype-katex'
 import RemarkGfm from 'remark-gfm'
 import RehypeRaw from 'rehype-raw'
 import SyntaxHighlighter from 'react-syntax-highlighter'
-import { atelierHeathLight } from 'react-syntax-highlighter/dist/esm/styles/hljs'
+import { atelierHeathDark, atelierHeathLight, } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import { Component, memo, useMemo, useRef, useState } from 'react'
 import { flow } from 'lodash-es'
-import cn from '@/utils/classnames'
-import CopyBtn from '@/app/components/base/copy-btn'
+import ActionButton from '@/app/components/base/action-button'
+import CopyIcon from '@/app/components/base/copy-icon'
 import SVGBtn from '@/app/components/base/svg'
 import Flowchart from '@/app/components/base/mermaid'
-import ImageGallery from '@/app/components/base/image-gallery'
+import ImageGallery from '@/app/components/base/image-gallery'd: \work\dify\web\app\components\base\copy - icon
+import { useChatContext } from '@/app/components/chat/context'
 import VideoGallery from '@/app/components/base/video-gallery'
 import AudioGallery from '@/app/components/base/audio-gallery'
 import SVGRenderer from '@/app/components/base/svg-gallery'
 import MarkdownButton from '@/app/components/base/markdown-blocks/button'
 import MarkdownForm from '@/app/components/base/markdown-blocks/form'
 import ThinkBlock from '@/app/components/base/markdown-blocks/think-block'
-import { useChatContext } from '@/app/components/chat/context'
+
+import cn from '@/utils/classnames'
 
 // Available language https://github.com/react-syntax-highlighter/react-syntax-highlighter/blob/master/AVAILABLE_LANGUAGES_HLJS.MD
 const capitalizationLanguageNameMap: Record<string, string> = {
@@ -62,17 +64,15 @@ const preprocessLaTeX = (content: string) => {
 
   return flow([
     (str: string) => str.replace(/\\\[(.*?)\\\]/g, (_, equation) => `$$${equation}$$`),
+    (str: string) => str.replace(/\\\[(.*?)\\\]/gs, (_, equation) => `$$${equation}$$`),
     (str: string) => str.replace(/\\\((.*?)\\\)/g, (_, equation) => `$$${equation}$$`),
     (str: string) => str.replace(/(^|[^\\])\$(.+?)\$/g, (_, prefix, equation) => `${prefix}$${equation}$`),
   ])(content)
 }
 
 const preprocessThinkTag = (content: string) => {
-  if (!content.trim().startsWith('<think>\n'))
-    return content
-
   return flow([
-    (str: string) => str.replace('<think>\n', '<details>\n'),
+    (str: string) => str.replace('<think>\n', '<details data-think=true>\n'),
     (str: string) => str.replace('\n</think>', '\n[ENDTHINKFLAG]</details>'),
   ])(content)
 }
@@ -103,7 +103,7 @@ export function PreCode(props: { children: any }) {
 // visit https://reactjs.org/docs/error-decoder.html?invariant=185 for the full message
 // or use the non-minified dev environment for full errors and additional helpful warnings.
 
-const CodeBlock: any = memo(({ inline, className, children, ...props }) => {
+const CodeBlock: any = memo(({ inline, className, children, ...props }: any) => {
   const [isSVG, setIsSVG] = useState(true)
   const match = /language-(\w+)/.exec(className || '')
   const language = match?.[1]
@@ -146,7 +146,9 @@ const CodeBlock: any = memo(({ inline, className, children, ...props }) => {
           style={atelierHeathLight}
           customStyle={{
             paddingLeft: 12,
-            backgroundColor: '#fff',
+            borderBottomLeftRadius: '10px',
+            borderBottomRightRadius: '10px',
+            backgroundColor: 'var(--color-components-input-bg-normal)',
           }}
           language={match?.[1]}
           showLineNumbers
@@ -162,21 +164,14 @@ const CodeBlock: any = memo(({ inline, className, children, ...props }) => {
     return <code {...props} className={className}>{children}</code>
 
   return (
-    <div>
-      <div
-        className='flex justify-between h-8 items-center p-1 pl-3 border-b'
-        style={{
-          borderColor: 'rgba(0, 0, 0, 0.05)',
-        }}
-      >
-        <div className='text-[13px] text-gray-500 font-normal'>{languageShowName}</div>
-        <div style={{ display: 'flex' }}>
+    <div className='relative'>
+      <div className='bg-components-input-bg-normal rounded-t-[10px] flex justify-between h-8 items-center p-1 pl-3 border-b border-divider-subtle'>
+        <div className='system-xs-semibold-uppercase text-text-secondary'>{languageShowName}</div>
+        <div className='flex items-center gap-1'>
           {(['mermaid', 'svg']).includes(language!) && <SVGBtn isSVG={isSVG} setIsSVG={setIsSVG} />}
-          <CopyBtn
-            className='mr-1'
-            value={String(children).replace(/\n$/, '')}
-            isPlain
-          />
+          <ActionButton>
+            <CopyIcon content={String(children).replace(/\n$/, '')} />
+          </ActionButton>
         </div>
       </div>
       {renderCodeContent}
@@ -185,16 +180,16 @@ const CodeBlock: any = memo(({ inline, className, children, ...props }) => {
 })
 CodeBlock.displayName = 'CodeBlock'
 
-const VideoBlock: any = memo(({ node }) => {
-  const srcs = node.children.filter(child => 'properties' in child).map(child => (child as any).properties.src)
+const VideoBlock: any = memo(({ node }: any) => {
+  const srcs = node.children.filter((child: any) => 'properties' in child).map((child: any) => (child as any).properties.src)
   if (srcs.length === 0)
     return null
   return <VideoGallery key={srcs.join()} srcs={srcs} />
 })
 VideoBlock.displayName = 'VideoBlock'
 
-const AudioBlock: any = memo(({ node }) => {
-  const srcs = node.children.filter(child => 'properties' in child).map(child => (child as any).properties.src)
+const AudioBlock: any = memo(({ node }: any) => {
+  const srcs = node.children.filter((child: any) => 'properties' in child).map((child: any) => (child as any).properties.src)
   if (srcs.length === 0)
     return null
   return <AudioGallery key={srcs.join()} srcs={srcs} />
@@ -214,11 +209,13 @@ const Paragraph = (paragraph: any) => {
     return (
       <>
         <ImageGallery srcs={[children_node[0].properties.src]} />
-        <div>{paragraph.children.slice(1)}</div>
+        {
+          Array.isArray(paragraph.children) ? <p>{paragraph.children.slice(1)}</p> : null
+        }
       </>
     )
   }
-  return <div>{paragraph.children}</div>
+  return <p>{paragraph.children}</p>
 }
 
 const Img = ({ src }: any) => {
@@ -228,25 +225,23 @@ const Img = ({ src }: any) => {
 const Link = ({ node, ...props }: any) => {
   if (node.properties?.href && node.properties.href?.toString().startsWith('abbr')) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-
     const { onSend } = useChatContext()
     const hidden_text = decodeURIComponent(node.properties.href.toString().split('abbr:')[1])
 
     return <abbr className="underline decoration-dashed !decoration-primary-700 cursor-pointer" onClick={() => onSend?.(hidden_text)} title={node.children[0]?.value}>{node.children[0]?.value}</abbr>
   }
-  // hide .bin file download link
   else {
-    return <a {...props} style={{ display: node.children[0]?.value.indexOf('.bin') ? 'none' : 'block' }} target="_blank" className="underline decoration-dashed !decoration-primary-700 cursor-pointer">{node.children[0] ? node.children[0]?.value : 'Download'}</a>
+    return <a {...props} target="_blank" className="underline decoration-dashed !decoration-primary-700 cursor-pointer">{node.children[0] ? node.children[0]?.value : 'Download'}</a>
   }
 }
 
-export function Markdown(props: { content: string; className?: string }) {
+export function Markdown(props: { content: string; className?: string; customDisallowedElements?: string[] }) {
   const latexContent = flow([
     preprocessThinkTag,
     preprocessLaTeX,
   ])(props.content)
   return (
-    <div className={cn(props.className, 'markdown-body')}>
+    <div className={cn('markdown-body', '!text-text-primary', props.className)}>
       <ReactMarkdown
         remarkPlugins={[
           RemarkGfm,
@@ -263,6 +258,11 @@ export function Markdown(props: { content: string; className?: string }) {
                 if (node.type === 'element' && node.properties?.ref)
                   delete node.properties.ref
 
+                if (node.type === 'element' && !/^[a-z][a-z0-9]*$/i.test(node.tagName)) {
+                  node.type = 'text'
+                  node.value = `<${node.tagName}`
+                }
+
                 if (node.children)
                   node.children.forEach(iterate)
               }
@@ -270,7 +270,7 @@ export function Markdown(props: { content: string; className?: string }) {
             }
           },
         ]}
-        disallowedElements={['iframe', 'head', 'html', 'meta', 'link', 'style', 'body']}
+        disallowedElements={['iframe', 'head', 'html', 'meta', 'link', 'style', 'body', ...(props.customDisallowedElements || [])]}
         components={{
           code: CodeBlock,
           img: Img,
@@ -280,7 +280,7 @@ export function Markdown(props: { content: string; className?: string }) {
           p: Paragraph,
           button: MarkdownButton,
           form: MarkdownForm,
-          script: ScriptBlock,
+          script: ScriptBlock as any,
           details: ThinkBlock,
         }}
       >
