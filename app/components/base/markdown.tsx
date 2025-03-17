@@ -14,7 +14,7 @@ import ActionButton from '@/app/components/base/action-button'
 import CopyIcon from '@/app/components/base/copy-icon'
 import SVGBtn from '@/app/components/base/svg'
 import Flowchart from '@/app/components/base/mermaid'
-import ImageGallery from '@/app/components/base/image-gallery'd: \work\dify\web\app\components\base\copy - icon
+import ImageGallery from '@/app/components/base/image-gallery'
 import { useChatContext } from '@/app/components/chat/context'
 import VideoGallery from '@/app/components/base/video-gallery'
 import AudioGallery from '@/app/components/base/audio-gallery'
