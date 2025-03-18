@@ -43,6 +43,7 @@ import { changeLanguage } from '@/i18n/i18next-config'
 import { useAppFavicon } from '@/hooks/use-app-favicon'
 import { InputVarType } from '@/app/components/workflow/types'
 import { TransferMethod } from '@/types/app'
+import _ from 'lodash-es'
 
 function getFormattedChatList(messages: any[]) {
   const newChatList: ChatItem[] = []
@@ -160,45 +161,49 @@ export const useChatWithHistory = (installedAppInfo?: InstalledApp) => {
     setNewConversationInputs(newInputs)
   }, [])
   const inputsForms = useMemo(() => {
-    return (appParams?.user_input_form || []).filter((item: any) => !item.external_data_tool).map((item: any) => {
-      if (item.paragraph) {
-        return {
-          ...item.paragraph,
-          type: 'paragraph',
+    return _.chain(appParams?.user_input_form)
+      .filter((item: any) => !item.external_data_tool)
+      .map((item: any) => {
+        if (item.paragraph) {
+          return {
+            ...item.paragraph,
+            type: 'paragraph',
+          }
         }
-      }
-      if (item.number) {
-        return {
-          ...item.number,
-          type: 'number',
+        if (item.number) {
+          return {
+            ...item.number,
+            type: 'number',
+          }
         }
-      }
-      if (item.select) {
-        return {
-          ...item.select,
-          type: 'select',
+        if (item.select) {
+          return {
+            ...item.select,
+            type: 'select',
+          }
         }
-      }
 
-      if (item['file-list']) {
-        return {
-          ...item['file-list'],
-          type: 'file-list',
+        if (item['file-list']) {
+          return {
+            ...item['file-list'],
+            type: 'file-list',
+          }
         }
-      }
 
-      if (item.file) {
-        return {
-          ...item.file,
-          type: 'file',
+        if (item.file) {
+          return {
+            ...item.file,
+            type: 'file',
+          }
         }
-      }
 
-      return {
-        ...item['text-input'],
-        type: 'text-input',
-      }
-    })
+        return {
+          ...item['text-input'],
+          type: 'text-input',
+        }
+      })
+      .filter((item: any) => !item.variable.startsWith('_'))
+      .value()
   }, [appParams])
   useEffect(() => {
     const conversationInputs: Record<string, any> = {}
