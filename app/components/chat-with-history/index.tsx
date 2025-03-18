@@ -4,7 +4,7 @@ import {
   useState,
 } from 'react'
 import { useAsyncEffect } from 'ahooks'
-import { useThemeContext } from '@/app/components/chat/embedded-chatbot/theme/theme-context'
+import { useThemeContext } from '@/app/components/embedded-chatbot/theme/theme-context'
 import {
   ChatWithHistoryContext,
   useChatWithHistoryContext,
