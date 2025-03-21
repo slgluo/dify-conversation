@@ -56,7 +56,7 @@ const Chatbot = () => {
         {!isMobile && <Loading type='app' />}
         {isMobile && (
           <div className={cn('relative')}>
-            <div className={cn('flex flex-col h-[calc(100vh_-_60px)] border-[0.5px] border-components-panel-border rounded-2xl shadow-xs')}>
+            <div className={cn('flex flex-col border-[0.5px] border-components-panel-border rounded-2xl shadow-xs')}>
               <Loading type='app' />
             </div>
           </div>
@@ -71,7 +71,7 @@ const Chatbot = () => {
         {!isMobile && <AppUnavailable />}
         {isMobile && (
           <div className={cn('relative')}>
-            <div className={cn('flex flex-col h-[calc(100vh_-_60px)] border-[0.5px] border-components-panel-border rounded-2xl shadow-xs')}>
+            <div className={cn('flex flex-col border-[0.5px] border-components-panel-border rounded-2xl shadow-xs')}>
               <AppUnavailable />
             </div>
           </div>
@@ -84,7 +84,7 @@ const Chatbot = () => {
       <div
         className={cn(
           'flex flex-col border border-components-panel-border-subtle rounded-2xl',
-          isMobile ? 'h-[calc(100vh_-_60px)] border-[0.5px] border-components-panel-border shadow-xs' : 'h-[100vh] bg-chatbot-bg',
+          isMobile ? 'border-[0.5px] border-components-panel-border shadow-xs' : 'h-[100vh] bg-chatbot-bg',
         )}
         style={isMobile ? Object.assign({}, CssTransform(themeBuilder?.theme?.backgroundHeaderColorStyle ?? '')) : {}}
       >
@@ -104,24 +104,6 @@ const Chatbot = () => {
           )}
         </div>
       </div>
-      {/* powered by */}
-      {isMobile && (
-        <div className='shrink-0 h-[60px] pl-2 flex items-center'>
-          {!appData?.custom_config?.remove_webapp_brand && (
-            <div className={cn(
-              'shrink-0 px-2 flex items-center gap-1.5',
-            )}>
-              <div className='text-text-tertiary system-2xs-medium-uppercase'>{t('share.chat.poweredBy')}</div>
-              {appData?.custom_config?.replace_webapp_logo && (
-                <img src={appData?.custom_config?.replace_webapp_logo} alt='logo' className='block w-auto h-5' />
-              )}
-              {!appData?.custom_config?.replace_webapp_logo && (
-                <LogoSite className='!h-5' />
-              )}
-            </div>
-          )}
-        </div>
-      )}
     </div>
   )
 }
@@ -147,6 +129,7 @@ const EmbeddedChatbotWrapper = () => {
     newConversationInputsRef,
     handleNewConversationInputsChange,
     inputsForms,
+    shouldRenderInputsForms,
     handleNewConversation,
     handleStartChat,
     handleChangeConversation,
@@ -178,6 +161,7 @@ const EmbeddedChatbotWrapper = () => {
     newConversationInputsRef,
     handleNewConversationInputsChange,
     inputsForms,
+    shouldRenderInputsForms,
     handleNewConversation,
     handleStartChat,
     handleChangeConversation,

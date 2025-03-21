@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useChatWithHistoryContext } from '../context'
 import Input from './form-input'
@@ -11,6 +11,7 @@ const Form = () => {
   const {
     appParams,
     inputsForms,
+    shouldRenderInputsForms,
     newConversationInputs,
     newConversationInputsRef,
     handleNewConversationInputsChange,
@@ -94,13 +95,13 @@ const Form = () => {
     )
   }
 
-  if (!inputsForms.length)
+  if (!shouldRenderInputsForms.length)
     return null
 
   return (
     <div className='mb-4 py-2'>
       {
-        inputsForms.map(form => (
+        shouldRenderInputsForms.map(form => (
           <div
             key={form.variable}
             className={`flex mb-3 last-of-type:mb-0 text-sm text-gray-900 ${isMobile && '!flex-wrap'}`}

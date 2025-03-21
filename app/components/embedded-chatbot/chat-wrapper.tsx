@@ -33,6 +33,7 @@ const ChatWrapper = () => {
     currentConversationId,
     currentConversationItem,
     inputsForms,
+    shouldRenderInputsForms,
     newConversationInputs,
     newConversationInputsRef,
     handleNewConversationCompleted,
@@ -163,7 +164,7 @@ const ChatWrapper = () => {
   const [collapsed, setCollapsed] = useState(!!currentConversationId)
 
   const chatNode = useMemo(() => {
-    if (!inputsForms.length)
+    if (!shouldRenderInputsForms.length)
       return null
     if (isMobile) {
       if (!currentConversationId)
@@ -173,7 +174,7 @@ const ChatWrapper = () => {
     else {
       return <InputsForm collapsed={collapsed} setCollapsed={setCollapsed} />
     }
-  }, [inputsForms.length, isMobile, currentConversationId, collapsed])
+  }, [shouldRenderInputsForms.length, isMobile, currentConversationId, collapsed])
 
   const welcome = useMemo(() => {
     const welcomeMessage = chatList.find(item => item.isOpeningStatement)

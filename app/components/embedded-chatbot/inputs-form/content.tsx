@@ -16,6 +16,7 @@ const InputsFormContent = ({ showTip }: Props) => {
   const {
     appParams,
     inputsForms,
+    shouldRenderInputsForms,
     currentConversationId,
     currentConversationItem,
     newConversationInputs,
@@ -34,7 +35,7 @@ const InputsFormContent = ({ showTip }: Props) => {
 
   return (
     <div className='space-y-4'>
-      {inputsForms.map(form => (
+      {shouldRenderInputsForms.map(form => (
         <div key={form.variable} className='space-y-1'>
           <div className='h-6 flex items-center gap-1'>
             <div className='text-text-secondary system-md-semibold'>{form.label}</div>

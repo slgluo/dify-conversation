@@ -14,6 +14,7 @@ const ConfigPanel = () => {
   const {
     appData,
     inputsForms,
+    shouldRenderInputsForms,
     handleStartChat,
     showConfigPanelBeforeChat,
     isMobile,
@@ -121,7 +122,7 @@ const ConfigPanel = () => {
             <div className='p-6 rounded-b-xl'>
               <Form />
               <Button
-                className={`${inputsForms.length && !isMobile && 'ml-[136px]'}`}
+                className={`${shouldRenderInputsForms.length && !isMobile && 'ml-[136px]'}`}
                 variant='primary'
                 size='large'
                 onClick={handleStartChat}

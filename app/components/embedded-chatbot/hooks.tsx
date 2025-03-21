@@ -35,6 +35,7 @@ import { changeLanguage } from '@/i18n/i18next-config'
 import { InputVarType } from '@/app/components/workflow/types'
 import { TransferMethod } from '@/types/app'
 import { addFileInfos, sortAgentSorts } from '@/app/components/tools/utils'
+import { filter } from 'lodash-es'
 
 function getFormattedChatList(messages: any[]) {
   const newChatList: ChatItem[] = []
@@ -180,6 +181,9 @@ export const useEmbeddedChatbot = () => {
       }
     })
   }, [initInputs, appParams])
+
+  // 应该渲染的表单是过滤隐藏字段后的表单
+  const shouldRenderInputsForms = useMemo(() => filter(inputsForms, form => !form.variable.startsWith('_')), [inputsForms])
 
   useEffect(() => {
     // init inputs from url params
@@ -332,6 +336,7 @@ export const useEmbeddedChatbot = () => {
     newConversationInputsRef,
     handleNewConversationInputsChange,
     inputsForms,
+    shouldRenderInputsForms,
     handleNewConversation,
     handleStartChat,
     handleChangeConversation,

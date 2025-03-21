@@ -22,6 +22,7 @@ const ChatWrapper = () => {
     currentConversationId,
     currentConversationItem,
     inputsForms,
+    shouldRenderInputsForms,
     newConversationInputs,
     handleNewConversationCompleted,
     isMobile,
@@ -104,7 +105,7 @@ const ChatWrapper = () => {
   }, [chatList, doSend])
 
   const chatNode = useMemo(() => {
-    if (inputsForms.length) {
+    if (shouldRenderInputsForms.length) {
       return (
         <>
           <Header

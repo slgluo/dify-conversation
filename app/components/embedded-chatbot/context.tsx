@@ -31,6 +31,7 @@ export type EmbeddedChatbotContextValue = {
   newConversationInputsRef: RefObject<Record<string, any>>
   handleNewConversationInputsChange: (v: Record<string, any>) => void
   inputsForms: any[]
+  shouldRenderInputsForms: any[]
   handleNewConversation: () => void
   handleStartChat: (callback?: any) => void
   handleChangeConversation: (conversationId: string) => void
@@ -57,6 +58,7 @@ export const EmbeddedChatbotContext = createContext<EmbeddedChatbotContextValue>
   newConversationInputsRef: { current: {} },
   handleNewConversationInputsChange: () => {},
   inputsForms: [],
+  shouldRenderInputsForms: [],
   handleNewConversation: () => {},
   handleStartChat: () => {},
   handleChangeConversation: () => {},
