@@ -11,7 +11,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import type { ChatItem, WorkflowProcess } from '../../types'
 // TODO MARS
-// import TracingPanel from '@/app/components/workflow/run/tracing-panel'
+import TracingPanel from '@/app/components/workflow/run/tracing-panel'
 import cn from '@/utils/classnames'
 import { CheckCircle } from '@/app/components/base/icons/src/vender/solid/general'
 import { WorkflowRunningStatus } from '@/app/components/workflow/types'
@@ -88,7 +88,7 @@ const WorkflowProcessItem = ({
         </div>
         {!readonly && <RiArrowRightSLine className={`'ml-1 w-4 h-4 text-text-tertiary' ${collapse ? '' : 'rotate-90'}`} />}
       </div>
-      {/* {
+      {
         !collapse && !readonly && (
           <div className='mt-1.5'>
             {
@@ -100,7 +100,7 @@ const WorkflowProcessItem = ({
             }
           </div>
         )
-      } */}
+      }
     </div>
   )
 }
